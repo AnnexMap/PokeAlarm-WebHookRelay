@@ -163,7 +163,7 @@ class Manager(object):
                     if _type == 'discord':
                         from Discord import DiscordAlarm
                         self.__alarms.append(DiscordAlarm(alarm, self.__google_key))
-                    elif alarm['type'] == 'webhookrelay':
+                    elif _type == 'webhookrelay':
                         from WebHookRelay import WebHookRelayAlarm
                         self.__alarms.append(WebHookRelayAlarm(alarm))
                     elif _type == 'facebook_page':
