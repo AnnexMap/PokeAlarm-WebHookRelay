@@ -1,7 +1,6 @@
-#WebHookRelay
 WebHookRelay is a 3rd party extension of [PokeAlarm](https://github.com/kvangent/PokeAlarm) that allows you to buffer and relay notifications to an external webhook.
 
-#Installation
+<b>Installation</b>
 1. Copy the contents of the src folder into the PokeAlarm installation directory:
     \PokeAlarm\PokeAlarm\Manager.py
     \PokeAlarm\PokeAlarm\WebHookRelay\__init__.py
