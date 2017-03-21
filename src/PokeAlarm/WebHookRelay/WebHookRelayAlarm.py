@@ -50,13 +50,26 @@ class WebHookRelayAlarm(Alarm):
 
 		# Setup buffer
         self.refresh_buffer()
-        
+                
         log.info("WebHookRelay Alarm initialized.")
 
     # Establish connection with WebHookRelay
     def connect(self):
         pass
 
+    # Send a message letting the channel know that this alarm has started
+    def startup_message(self):
+        if self.__startup_message:
+            args = {
+                'url': self.__webhook_address,
+                'payload': {
+                    'username': 'PokeAlarm',
+                    'content': 'PokeAlarm activated!'
+                }
+            }
+            #try_sending(log, self.connect, "WebHookRelay", self.send_webhook, args)
+            log.info("Startup message sent!")
+        
     # Set the appropriate settings for each alert
     def set_alert(self, settings, default):
         alert = {
@@ -73,12 +86,11 @@ class WebHookRelayAlarm(Alarm):
         try_sending(log, self.connect, "WebHookRelay", self.send_webhook, args)
 
     def send_webhook(self, **args):
-        log.debug(args)
+        log.info(args)
         
-        webhook_url = args.pop('webhook_address')
         data = {
-            'move_1': args['info']['move_1_id'],
-            'move_2': args['info']['move_2_id'],
+            'move_1': args['info']['quick_id'],
+            'move_2': args['info']['charge_id'],
             'disappear_time': (args['info']['disappear_time'] - datetime(1970, 1, 1)).total_seconds(),
             'verified': 'false',
             'weight': args['info']['weight'],
@@ -104,7 +116,7 @@ class WebHookRelayAlarm(Alarm):
             log.debug("buffer size: {}".format(buffer_size))
             if len(self.__poke_buffer) > buffer_size:
                 log.info("Sending: {} pokemon".format(len(self.__poke_buffer)))
-                requests.post(webhook_url, json=self.__poke_buffer, timeout=(None, 1))
+                requests.post(self.__webhook_address, json=self.__poke_buffer, timeout=(None, 1))
                 # Refresh buffer
                 self.refresh_buffer()
         except requests.exceptions.ReadTimeout:
