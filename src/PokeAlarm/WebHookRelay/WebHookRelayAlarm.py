@@ -86,7 +86,7 @@ class WebHookRelayAlarm(Alarm):
         try_sending(log, self.connect, "WebHookRelay", self.send_webhook, args)
 
     def send_webhook(self, **args):
-        log.info(args)
+        log.debug(args)
         
         data = {
             'move_1': args['info']['quick_id'],
